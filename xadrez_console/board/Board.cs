@@ -17,4 +17,10 @@ public class Board
     {
         return _pieces[line, column];
     }
+
+    public void PlacePiece(Piece p, Position pos)
+    {
+        _pieces[pos.Line, pos.Column] = p;
+        p.Position = pos;
+    }
 }
