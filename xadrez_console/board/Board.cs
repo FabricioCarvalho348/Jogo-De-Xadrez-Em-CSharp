@@ -2,14 +2,19 @@
 
 public class Board
 {
-    public int lines { get; set; }
-    public int columns { get; set; }
-    public Piece[,] pieces;
+    public int Lines { get; set; }
+    public int Columns { get; set; }
+    private Piece[,] _pieces;
 
     public Board(int lines, int columns)
     {
-        this.lines = lines;
-        this.columns = columns;
-        pieces = new Piece[lines,columns];
+        this.Lines = lines;
+        this.Columns = columns;
+        _pieces = new Piece[lines,columns];
+    }
+
+    public Piece Piece(int line, int column)
+    {
+        return _pieces[line, column];
     }
 }

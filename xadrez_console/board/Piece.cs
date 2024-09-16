@@ -2,16 +2,16 @@
 
 public class Piece
 {
-    public Position position { get; set; }
-    public Color color { get; set; }
-    public int moveCount { get; protected set; }
-    public Board board { get; protected set; }
+    public Position Position { get; set; }
+    public Color Color { get; set; }
+    public int MoveCount { get; protected set; }
+    public Board Board { get; protected set; }
 
     public Piece(Position position, Board board, Color color)
     {
-        this.position = position;
-        this.board = board;
-        this.color = color;
-        moveCount = 0;
+        Position = position;
+        Board = board;
+        Color = color;
+        MoveCount = 0;
     }
 }
