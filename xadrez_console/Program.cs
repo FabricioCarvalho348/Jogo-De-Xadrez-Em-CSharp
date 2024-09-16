@@ -10,15 +10,21 @@ class Program
     {
         try
         {
-            Board board = new Board(8, 8);
-        
-            board.PlacePiece(new Rook(board, Color.Black) , new Position(0, 0));
-            board.PlacePiece(new Rook(board, Color.Black) , new Position(1, 3));
-            board.PlacePiece(new King(board, Color.Black) , new Position(2, 4));
-            
-            board.PlacePiece(new King(board, Color.White) , new Position(3, 5));
-        
-            Screen.PrintBoard(board);
+            ChessMatch chessMatch = new ChessMatch();
+
+            while (!chessMatch.Finish)
+            {
+                Console.Clear();
+                Screen.PrintBoard(chessMatch.Board);
+
+                Console.WriteLine();
+                Console.Write("Enter the source position: ");
+                Position origin = Screen.GetChessPosition().ToPosition();
+                Console.Write("Enter the destination position: ");
+                Position destination = Screen.GetChessPosition().ToPosition();
+                
+                chessMatch.ExecuteMove(origin, destination);
+            }
         }
         catch (BoardException e)
         {
