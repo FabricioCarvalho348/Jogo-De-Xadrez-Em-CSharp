@@ -13,6 +13,10 @@ public class Screen
         Console.WriteLine();
         Console.WriteLine("Turn: " + chessMatch.CurrentTurn);
         Console.WriteLine($"Waiting for the {chessMatch.CurrentPlayer} piece to move ");
+        if (chessMatch.xeque)
+        {
+            Console.WriteLine("XEQUE!");
+        }
     }
 
     public static void PrintCapturedPieces(ChessMatch chessMatch)
@@ -22,7 +26,10 @@ public class Screen
         PrintSetPiece(chessMatch.PiecesCaptured(Color.White));
         Console.WriteLine();
         Console.Write("Black: ");
+        ConsoleColor aux = Console.ForegroundColor;
+        Console.ForegroundColor = ConsoleColor.Cyan;
         PrintSetPiece(chessMatch.PiecesCaptured(Color.Black));
+        Console.ForegroundColor = aux;
         Console.WriteLine();
     }
 

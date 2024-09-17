@@ -14,8 +14,12 @@ public abstract class Piece
         this.TotalMovesPiece = 0;
     }
 
-    public void UpdateMoveCount() {
+    public void IncrementMoveCount() {
         TotalMovesPiece++;
+    }
+    
+    public void DecrementMoveCount() {
+        TotalMovesPiece--;
     }
 
     public bool ExistsMovePossibles()
