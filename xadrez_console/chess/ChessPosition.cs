@@ -4,22 +4,22 @@ namespace xadrez_console.chess;
 
 public class ChessPosition
 {
-    public char Column { get; set; }
-    public int Line { get; set; }
+    public char ChessColumn { get; set; }
+    public int ChessLine { get; set; }
 
-    public ChessPosition(char column, int line)
+    public ChessPosition(char chessColumn, int chessLine)
     {
-        Column = column;
-        Line = line;
+        this.ChessColumn = chessColumn;
+        this.ChessLine = chessLine;
     }
 
-    public Position ToPosition()
+    public Position ToPositionPiece()
     {
-        return new Position(8 - Line, Column - 'a');
+        return new Position(8 - ChessLine, ChessColumn - 'a');
     }
 
     public override string ToString()
     {
-        return "" + Column + Line;
+        return "" + ChessColumn + ChessLine;
     }
 }

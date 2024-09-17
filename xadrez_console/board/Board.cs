@@ -4,64 +4,71 @@ namespace xadrez_console.board;
 
 public class Board
 {
-    public int Lines { get; set; }
-    public int Columns { get; set; }
-    private Piece[,] _pieces;
+    public int BoardLines { get; set; }
+    public int BoardColumns { get; set; }
+    private Piece[,] _boardPieces;
 
-    public Board(int lines, int columns)
+    public Board(int boardLines, int boardColumns)
     {
-        this.Lines = lines;
-        this.Columns = columns;
-        _pieces = new Piece[lines,columns];
+        this.BoardLines = boardLines;
+        this.BoardColumns = boardColumns;
+        _boardPieces = new Piece[boardLines, boardColumns];
     }
 
-    public Piece Piece(int line, int column)
+    public Piece GetPiece(int currentLines, int currentColumns)
     {
-        return _pieces[line, column];
+        return _boardPieces[currentLines, currentColumns];
     }
 
-    public Piece Piece(Position pos)
+    public Piece GetPiece(Position currentPosition)
     {
-        return _pieces[pos.Line, pos.Column];
+        return _boardPieces[currentPosition.PositionLines, currentPosition.PositionColumns];
     }
 
-    public bool PieceExists(Position pos)
+    public bool HasPieceOnBoard(Position currentPosition)
     {
-        ValidatePosition(pos);
-        return Piece(pos) != null;
+        ValidatePosition(currentPosition);
+        return GetPiece(currentPosition) != null;
     }
-    
-    public void PlacePiece(Piece p, Position pos)
+
+    public void PlacePieceBoard(Piece p, Position currentPosition)
     {
-        if (PieceExists(pos))
+        if (HasPieceOnBoard(currentPosition))
         {
-            throw new BoardException("There is already a piece in this position!");
+            throw new BoardException("Já existe uma peça nessa posição!");
         }
-        _pieces[pos.Line, pos.Column] = p;
-        p.Position = pos;
+
+        _boardPieces[currentPosition.PositionLines, currentPosition.PositionColumns] = p;
+        p.CurrentPosition = currentPosition;
     }
 
-    public Piece RemovePiece(Position pos)
+    public Piece RemovePieceBoard(Position currentPosition)
     {
-        if (Piece(pos) == null)
+        if (GetPiece(currentPosition) == null)
         {
             return null;
         }
 
-        Piece aux = Piece(pos);
-        aux.Position = null;
-        _pieces[pos.Line, pos.Column] = null;
+        Piece aux = GetPiece(currentPosition);
+        aux.CurrentPosition = null;
+        _boardPieces[currentPosition.PositionLines, currentPosition.PositionColumns] = null;
         return aux;
     }
 
-    public bool ValidPosition(Position pos)
+    public bool IsValidPosition(Position currentPosition)
     {
-        return pos.Line >= 0 && pos.Line < Lines && pos.Column >= 0 && pos.Column < Columns;
+        if (currentPosition.PositionLines < 0 || currentPosition.PositionLines >= BoardLines ||
+            currentPosition.PositionColumns < 0 || currentPosition.PositionColumns >= BoardColumns)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public void ValidatePosition(Position pos)
     {
-        if (!ValidPosition(pos))
+        if (!IsValidPosition(pos))
         {
             throw new BoardException("Invalid position!");
         }

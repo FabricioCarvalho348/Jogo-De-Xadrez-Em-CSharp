@@ -2,19 +2,22 @@
 
 public class Position
 {
-    public int Line { get; set; }
-    public int Column { get; set; }
+    public int PositionLines { get; set; }
+    public int PositionColumns { get; set; }
 
-    public Position(int line, int column)
-    {
-        this.Line = line;
-        this.Column = column;
+    public Position(int lines, int columns) {
+        this.PositionLines = lines;
+        this.PositionColumns = columns;
     }
 
-    public override string ToString()
-    {
-        return Line
+    public void DefineValuesPosition(int lines, int columns) {
+        this.PositionLines = lines;
+        this.PositionColumns = columns;
+    }
+
+    public override string ToString() {
+        return PositionLines
                + ", "
-               + Column;
+               + PositionColumns;
     }
 }
