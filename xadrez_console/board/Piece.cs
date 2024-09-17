@@ -18,5 +18,27 @@ public abstract class Piece
         TotalMovesPiece++;
     }
 
+    public bool ExistsMovePossibles()
+    {
+        bool[,] mov = MovimentPossibles();
+        for (int i = 0; i < AssociateBoard.BoardLines; i++)
+        {
+            for (int j = 0; j < AssociateBoard.BoardColumns; j++)
+            {
+                if (mov[i, j])
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public bool CanMoveTo(Position currentPosition)
+    {
+        return MovimentPossibles()[currentPosition.PositionLines, currentPosition.PositionColumns];
+    }
+
     public abstract bool[,] MovimentPossibles();
 }

@@ -5,6 +5,37 @@ namespace xadrez_console;
 
 public class Screen
 {
+    public static void PrintMatch(ChessMatch chessMatch)
+    {
+        PrintBoard(chessMatch.CurrentBoardChessMatch);
+        Console.WriteLine();
+        PrintCapturedPieces(chessMatch);
+        Console.WriteLine();
+        Console.WriteLine("Turn: " + chessMatch.CurrentTurn);
+        Console.WriteLine($"Waiting for the {chessMatch.CurrentPlayer} piece to move ");
+    }
+
+    public static void PrintCapturedPieces(ChessMatch chessMatch)
+    {
+        Console.WriteLine("Pieces captured: ");
+        Console.Write("White: ");
+        PrintSetPiece(chessMatch.PiecesCaptured(Color.White));
+        Console.WriteLine();
+        Console.Write("Black: ");
+        PrintSetPiece(chessMatch.PiecesCaptured(Color.Black));
+        Console.WriteLine();
+    }
+
+    public static void PrintSetPiece(HashSet<Piece> setPiece)
+    {
+        Console.Write("[");
+        foreach (var piece in setPiece)
+        {
+            Console.Write(piece + " ");
+        }
+        Console.Write("]");
+    } 
+    
     public static void PrintBoard(Board currentBoard)
     {
         for (int i = 0; i < currentBoard.BoardLines; i++)

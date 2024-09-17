@@ -4,7 +4,7 @@ namespace xadrez_console.chess;
 
 public class Rook : Piece
 {
-    public Rook(Board tab, Color cor) : base(tab, cor)
+    public Rook(Board associateBoard, Color pieceColor) : base(associateBoard, pieceColor)
     {
     }
 
