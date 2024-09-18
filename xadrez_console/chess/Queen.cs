@@ -25,7 +25,7 @@ public class Queen : Piece
 
         Position currentPosition = new Position(0, 0);
 
-        
+
         // direita
         currentPosition.DefineValuesPosition(CurrentPosition.PositionLines, CurrentPosition.PositionColumns + 1);
         while (AssociateBoard.IsValidPosition(currentPosition) && IsValidMove(currentPosition))
@@ -53,7 +53,7 @@ public class Queen : Piece
 
             currentPosition.PositionColumns = currentPosition.PositionColumns - 1;
         }
-        
+
         // acima
         currentPosition.DefineValuesPosition(CurrentPosition.PositionLines - 1, CurrentPosition.PositionColumns);
         while (AssociateBoard.IsValidPosition(currentPosition) && IsValidMove(currentPosition))
@@ -81,53 +81,65 @@ public class Queen : Piece
 
             currentPosition.PositionLines = currentPosition.PositionLines + 1;
         }
-        
+
         // Noroeste
-        currentPosition.DefineValuesPosition(currentPosition.PositionLines - 1, currentPosition.PositionColumns - 1);
+        currentPosition.DefineValuesPosition(CurrentPosition.PositionLines - 1, CurrentPosition.PositionColumns - 1);
         while (AssociateBoard.IsValidPosition(currentPosition) && IsValidMove(currentPosition))
         {
             mat[currentPosition.PositionLines, currentPosition.PositionColumns] = true;
-            if (AssociateBoard.GetPiece(currentPosition) != null && AssociateBoard.GetPiece(currentPosition).PieceColor != PieceColor)
+            if (AssociateBoard.GetPiece(currentPosition) != null &&
+                AssociateBoard.GetPiece(currentPosition).PieceColor != PieceColor)
             {
                 break;
             }
-            currentPosition.DefineValuesPosition(currentPosition.PositionLines - 1, currentPosition.PositionColumns - 1);
+
+            currentPosition.DefineValuesPosition(currentPosition.PositionLines - 1,
+                currentPosition.PositionColumns - 1);
         }
-        
+
         // Nordeste
-        currentPosition.DefineValuesPosition(currentPosition.PositionLines - 1, currentPosition.PositionColumns + 1);
+        currentPosition.DefineValuesPosition(CurrentPosition.PositionLines - 1, CurrentPosition.PositionColumns + 1);
         while (AssociateBoard.IsValidPosition(currentPosition) && IsValidMove(currentPosition))
         {
             mat[currentPosition.PositionLines, currentPosition.PositionColumns] = true;
-            if (AssociateBoard.GetPiece(currentPosition) != null && AssociateBoard.GetPiece(currentPosition).PieceColor != PieceColor)
+            if (AssociateBoard.GetPiece(currentPosition) != null &&
+                AssociateBoard.GetPiece(currentPosition).PieceColor != PieceColor)
             {
                 break;
             }
-            currentPosition.DefineValuesPosition(currentPosition.PositionLines - 1, currentPosition.PositionColumns + 1);
+
+            currentPosition.DefineValuesPosition(currentPosition.PositionLines - 1,
+                currentPosition.PositionColumns + 1);
         }
-        
+
         // Sudeste
-        currentPosition.DefineValuesPosition(currentPosition.PositionLines + 1, currentPosition.PositionColumns + 1);
+        currentPosition.DefineValuesPosition(CurrentPosition.PositionLines + 1, CurrentPosition.PositionColumns + 1);
         while (AssociateBoard.IsValidPosition(currentPosition) && IsValidMove(currentPosition))
         {
             mat[currentPosition.PositionLines, currentPosition.PositionColumns] = true;
-            if (AssociateBoard.GetPiece(currentPosition) != null && AssociateBoard.GetPiece(currentPosition).PieceColor != PieceColor)
+            if (AssociateBoard.GetPiece(currentPosition) != null &&
+                AssociateBoard.GetPiece(currentPosition).PieceColor != PieceColor)
             {
                 break;
             }
-            currentPosition.DefineValuesPosition(currentPosition.PositionLines + 1, currentPosition.PositionColumns + 1);
+
+            currentPosition.DefineValuesPosition(CurrentPosition.PositionLines + 1,
+                CurrentPosition.PositionColumns + 1);
         }
-       
+
         // Sudoeste
-        currentPosition.DefineValuesPosition(currentPosition.PositionLines + 1, currentPosition.PositionColumns - 1);
+        currentPosition.DefineValuesPosition(CurrentPosition.PositionLines + 1, CurrentPosition.PositionColumns - 1);
         while (AssociateBoard.IsValidPosition(currentPosition) && IsValidMove(currentPosition))
         {
             mat[currentPosition.PositionLines, currentPosition.PositionColumns] = true;
-            if (AssociateBoard.GetPiece(currentPosition) != null && AssociateBoard.GetPiece(currentPosition).PieceColor != PieceColor)
+            if (AssociateBoard.GetPiece(currentPosition) != null &&
+                AssociateBoard.GetPiece(currentPosition).PieceColor != PieceColor)
             {
                 break;
             }
-            currentPosition.DefineValuesPosition(currentPosition.PositionLines + 1, currentPosition.PositionColumns - 1);
+
+            currentPosition.DefineValuesPosition(currentPosition.PositionLines + 1,
+                currentPosition.PositionColumns - 1);
         }
 
         return mat;

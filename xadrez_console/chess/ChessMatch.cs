@@ -11,7 +11,7 @@ public class ChessMatch
     public bool MatchEnded { get; private set; }
     private HashSet<Piece> _matchPieces = new HashSet<Piece>();
     private HashSet<Piece> _capturedPieces = new HashSet<Piece>();
-    public bool xeque { get; private set; }
+    public bool Xeque { get; private set; }
 
     public ChessMatch()
     {
@@ -19,7 +19,7 @@ public class ChessMatch
         CurrentTurn = 1;
         CurrentPlayer = Color.White;
         MatchEnded = false;
-        xeque = false;
+        Xeque = false;
         _matchPieces = new HashSet<Piece>();
         _capturedPieces = new HashSet<Piece>();
         PlacesPiecesInBoard();
@@ -36,6 +36,26 @@ public class ChessMatch
             _capturedPieces.Add(capturedPiece);
         }
 
+        // #specialplay roque pequeno
+        if (currentPiece is King && destination.PositionColumns == origin.PositionColumns + 2)
+        {
+            Position originRook = new Position(origin.PositionLines, origin.PositionColumns + 3);
+            Position destinationRook = new Position(destination.PositionLines, destination.PositionColumns + 1);
+            Piece currentRook = CurrentBoardChessMatch.RemovePieceBoard(originRook);
+            currentRook.IncrementMoveCount();
+            CurrentBoardChessMatch.PlacePieceBoard(currentRook, destinationRook);
+        }
+
+        // #specialplay roque grande
+        if (currentPiece is King && destination.PositionColumns == origin.PositionColumns - 2)
+        {
+            Position originRook = new Position(origin.PositionLines, origin.PositionColumns - 4);
+            Position destinationRook = new Position(destination.PositionLines, destination.PositionColumns - 1);
+            Piece currentRook = CurrentBoardChessMatch.RemovePieceBoard(originRook);
+            currentRook.IncrementMoveCount();
+            CurrentBoardChessMatch.PlacePieceBoard(currentRook, destinationRook);
+        }
+
         return capturedPiece;
     }
 
@@ -48,14 +68,35 @@ public class ChessMatch
             CurrentBoardChessMatch.PlacePieceBoard(capturedPiece, destination);
             _capturedPieces.Remove(capturedPiece);
         }
+
         CurrentBoardChessMatch.PlacePieceBoard(currentPiece, origin);
+
+        // #specialplay roque pequeno
+        if (currentPiece is King && destination.PositionColumns == origin.PositionColumns + 2)
+        {
+            Position originRook = new Position(origin.PositionLines, origin.PositionColumns + 3);
+            Position destinationRook = new Position(destination.PositionLines, destination.PositionColumns + 1);
+            Piece currentRook = CurrentBoardChessMatch.RemovePieceBoard(destinationRook);
+            currentRook.DecrementMoveCount();
+            CurrentBoardChessMatch.PlacePieceBoard(currentRook, originRook);
+        }
+
+        // #specialplay roque grande
+        if (currentPiece is King && destination.PositionColumns == origin.PositionColumns - 2)
+        {
+            Position originRook = new Position(origin.PositionLines, origin.PositionColumns - 4);
+            Position destinationRook = new Position(destination.PositionLines, destination.PositionColumns - 1);
+            Piece currentRook = CurrentBoardChessMatch.RemovePieceBoard(destinationRook);
+            currentRook.IncrementMoveCount();
+            CurrentBoardChessMatch.PlacePieceBoard(currentRook, originRook);
+        }
     }
 
     public void MakePlay(Position origin, Position destination)
     {
         Piece capturedPiece = ExecuteMove(origin, destination);
-        
-        if(IsInCheck(CurrentPlayer))
+
+        if (IsInCheck(CurrentPlayer))
         {
             UndoMove(origin, destination, capturedPiece);
             throw new BoardException("You can't put yourself in check!");
@@ -63,15 +104,15 @@ public class ChessMatch
 
         if (IsInCheck(Opponent(CurrentPlayer)))
         {
-            xeque = true;
+            Xeque = true;
         }
         else
         {
-            xeque = false;
+            Xeque = false;
         }
 
         if (TestXequeMate(Opponent(CurrentPlayer)))
-        { 
+        {
             MatchEnded = true;
         }
         else
@@ -143,13 +184,14 @@ public class ChessMatch
                 aux.Add(matchPiece);
             }
         }
+
         aux.ExceptWith(PiecesCaptured(color));
         return aux;
     }
 
     private Color Opponent(Color color)
     {
-        if (color == Color.White) 
+        if (color == Color.White)
         {
             return Color.Black;
         }
@@ -168,6 +210,7 @@ public class ChessMatch
                 return piece;
             }
         }
+
         return null;
     }
 
@@ -223,7 +266,7 @@ public class ChessMatch
 
         return true;
     }
-    
+
 
     public void PlaceNewPiece(char column, int line, Piece piece)
     {
@@ -237,7 +280,7 @@ public class ChessMatch
         PlaceNewPiece('b', 1, new Knight(CurrentBoardChessMatch, Color.White));
         PlaceNewPiece('c', 1, new Bishop(CurrentBoardChessMatch, Color.White));
         PlaceNewPiece('d', 1, new Queen(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('e', 1, new King(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('e', 1, new King(CurrentBoardChessMatch, Color.White, this));
         PlaceNewPiece('f', 1, new Bishop(CurrentBoardChessMatch, Color.White));
         PlaceNewPiece('g', 1, new Knight(CurrentBoardChessMatch, Color.White));
         PlaceNewPiece('h', 1, new Rook(CurrentBoardChessMatch, Color.White));
@@ -255,7 +298,7 @@ public class ChessMatch
         PlaceNewPiece('b', 8, new Knight(CurrentBoardChessMatch, Color.Black));
         PlaceNewPiece('c', 8, new Bishop(CurrentBoardChessMatch, Color.Black));
         PlaceNewPiece('d', 8, new Queen(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('e', 8, new King(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('e', 8, new King(CurrentBoardChessMatch, Color.Black, this));
         PlaceNewPiece('f', 8, new Bishop(CurrentBoardChessMatch, Color.Black));
         PlaceNewPiece('g', 8, new Knight(CurrentBoardChessMatch, Color.Black));
         PlaceNewPiece('h', 8, new Rook(CurrentBoardChessMatch, Color.Black));

@@ -15,7 +15,7 @@ public class Screen
         if (!chessMatch.MatchEnded)
         {
             Console.WriteLine($"Waiting for the {chessMatch.CurrentPlayer} piece to move ");
-            if (chessMatch.xeque)
+            if (chessMatch.Xeque)
             {
                 Console.WriteLine("XEQUE!");
             }
@@ -57,14 +57,12 @@ public static void PrintBoard(Board currentBoard)
     var whiteSquareBackground = ConsoleColor.Gray;
     var blackSquareBackground = ConsoleColor.DarkGray;
 
-    // Imprime as linhas do tabuleiro
     for (int i = 0; i < currentBoard.BoardLines; i++)
     {
-        Console.Write(8 - i + " "); // Número da linha
+        Console.Write(8 - i + " ");
 
         for (int j = 0; j < currentBoard.BoardColumns; j++)
         {
-            // Alterna entre quadrados brancos e pretos
             if ((i + j) % 2 == 0)
             {
                 Console.BackgroundColor = whiteSquareBackground;
@@ -75,15 +73,14 @@ public static void PrintBoard(Board currentBoard)
             }
 
             PrintPiece(currentBoard.GetPiece(i, j));
-            Console.BackgroundColor = originBackground; // Resetar cor de fundo após imprimir quadrado
+            Console.BackgroundColor = originBackground;
         }
 
         Console.WriteLine();
     }
-
-    // Linha de coordenadas
+    
     Console.WriteLine("   a  b  c  d  e  f  g  h");
-    Console.BackgroundColor = originBackground; // Resetar cor de fundo
+    Console.BackgroundColor = originBackground;
 }
 
 public static void PrintBoard(Board currentBoard, bool[,] possiblePositions)
@@ -93,14 +90,12 @@ public static void PrintBoard(Board currentBoard, bool[,] possiblePositions)
     var blackSquareBackground = ConsoleColor.DarkGray;
     var highlightBackground = ConsoleColor.Green;
 
-    // Imprime as linhas do tabuleiro
     for (int i = 0; i < currentBoard.BoardLines; i++)
     {
-        Console.Write(8 - i + " "); // Número da linha
+        Console.Write(8 - i + " ");
 
         for (int j = 0; j < currentBoard.BoardColumns; j++)
         {
-            // Alterna entre quadrados brancos e pretos
             if ((i + j) % 2 == 0)
             {
                 Console.BackgroundColor = whiteSquareBackground;
@@ -110,22 +105,20 @@ public static void PrintBoard(Board currentBoard, bool[,] possiblePositions)
                 Console.BackgroundColor = blackSquareBackground;
             }
 
-            // Destaca casas onde o movimento é possível
             if (possiblePositions[i, j])
             {
                 Console.BackgroundColor = highlightBackground;
             }
 
             PrintPiece(currentBoard.GetPiece(i, j));
-            Console.BackgroundColor = originBackground; // Resetar cor de fundo após imprimir quadrado
+            Console.BackgroundColor = originBackground;
         }
 
         Console.WriteLine();
     }
-
-    // Linha de coordenadas
+    
     Console.WriteLine("   a  b  c  d  e  f  g  h");
-    Console.BackgroundColor = originBackground; // Resetar cor de fundo
+    Console.BackgroundColor = originBackground; 
 }
 
 
