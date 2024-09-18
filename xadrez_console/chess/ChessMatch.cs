@@ -12,6 +12,7 @@ public class ChessMatch
     private HashSet<Piece> _matchPieces = new HashSet<Piece>();
     private HashSet<Piece> _capturedPieces = new HashSet<Piece>();
     public bool Xeque { get; private set; }
+    public Piece VulnerableEnPassant;
 
     public ChessMatch()
     {
@@ -20,6 +21,7 @@ public class ChessMatch
         CurrentPlayer = Color.White;
         MatchEnded = false;
         Xeque = false;
+        VulnerableEnPassant = null;
         _matchPieces = new HashSet<Piece>();
         _capturedPieces = new HashSet<Piece>();
         PlacesPiecesInBoard();
@@ -54,6 +56,25 @@ public class ChessMatch
             Piece currentRook = CurrentBoardChessMatch.RemovePieceBoard(originRook);
             currentRook.IncrementMoveCount();
             CurrentBoardChessMatch.PlacePieceBoard(currentRook, destinationRook);
+        }
+        
+        // #specialplay en passant
+        if (currentPiece is Pawn)
+        {
+            if (origin.PositionColumns != destination.PositionColumns && capturedPiece == null)
+            {
+                Position positionPawn;
+                if (currentPiece.PieceColor == Color.White)
+                {
+                    positionPawn = new Position(destination.PositionLines + 1, destination.PositionColumns);
+                }
+                else
+                {
+                    positionPawn = new Position(destination.PositionLines - 1, destination.PositionColumns);
+                }
+                capturedPiece = CurrentBoardChessMatch.RemovePieceBoard(positionPawn);
+                _capturedPieces.Add(capturedPiece);
+            }
         }
 
         return capturedPiece;
@@ -90,6 +111,25 @@ public class ChessMatch
             currentRook.IncrementMoveCount();
             CurrentBoardChessMatch.PlacePieceBoard(currentRook, originRook);
         }
+        
+        // #specialplay en passant
+        if (currentPiece is Pawn)
+        {
+            if (origin.PositionColumns != destination.PositionColumns && capturedPiece == VulnerableEnPassant)
+            {
+                Piece pawn = CurrentBoardChessMatch.RemovePieceBoard(destination);
+                Position positionPawn;
+                if (currentPiece.PieceColor == Color.White)
+                {
+                    positionPawn = new Position(3, destination.PositionColumns);
+                }
+                else
+                {
+                    positionPawn = new Position(4, destination.PositionColumns);
+                }
+                CurrentBoardChessMatch.PlacePieceBoard(pawn, positionPawn);
+            }
+        }
     }
 
     public void MakePlay(Position origin, Position destination)
@@ -119,6 +159,18 @@ public class ChessMatch
         {
             CurrentTurn++;
             SwitchPlayer();
+        }
+
+        Piece currentPiece = CurrentBoardChessMatch.GetPiece(destination);
+        
+        // SPECIALPLAY EN PASSANT
+        if (currentPiece is Pawn && (destination.PositionLines == origin.PositionLines - 2 || destination.PositionLines == origin.PositionLines + 2))
+        {
+            VulnerableEnPassant = currentPiece;
+        }
+        else
+        {
+            VulnerableEnPassant = null;
         }
     }
 
@@ -284,14 +336,14 @@ public class ChessMatch
         PlaceNewPiece('f', 1, new Bishop(CurrentBoardChessMatch, Color.White));
         PlaceNewPiece('g', 1, new Knight(CurrentBoardChessMatch, Color.White));
         PlaceNewPiece('h', 1, new Rook(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('a', 2, new Pawn(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('b', 2, new Pawn(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('c', 2, new Pawn(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('d', 2, new Pawn(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('e', 2, new Pawn(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('f', 2, new Pawn(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('g', 2, new Pawn(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('h', 2, new Pawn(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('a', 2, new Pawn(CurrentBoardChessMatch, Color.White, this));
+        PlaceNewPiece('b', 2, new Pawn(CurrentBoardChessMatch, Color.White, this));
+        PlaceNewPiece('c', 2, new Pawn(CurrentBoardChessMatch, Color.White, this));
+        PlaceNewPiece('d', 2, new Pawn(CurrentBoardChessMatch, Color.White, this));
+        PlaceNewPiece('e', 2, new Pawn(CurrentBoardChessMatch, Color.White, this));
+        PlaceNewPiece('f', 2, new Pawn(CurrentBoardChessMatch, Color.White, this));
+        PlaceNewPiece('g', 2, new Pawn(CurrentBoardChessMatch, Color.White, this));
+        PlaceNewPiece('h', 2, new Pawn(CurrentBoardChessMatch, Color.White, this));
 
 
         PlaceNewPiece('a', 8, new Rook(CurrentBoardChessMatch, Color.Black));
@@ -302,13 +354,13 @@ public class ChessMatch
         PlaceNewPiece('f', 8, new Bishop(CurrentBoardChessMatch, Color.Black));
         PlaceNewPiece('g', 8, new Knight(CurrentBoardChessMatch, Color.Black));
         PlaceNewPiece('h', 8, new Rook(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('a', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('b', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('c', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('d', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('e', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('f', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('g', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('h', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('a', 7, new Pawn(CurrentBoardChessMatch, Color.Black, this));
+        PlaceNewPiece('b', 7, new Pawn(CurrentBoardChessMatch, Color.Black, this));
+        PlaceNewPiece('c', 7, new Pawn(CurrentBoardChessMatch, Color.Black, this));
+        PlaceNewPiece('d', 7, new Pawn(CurrentBoardChessMatch, Color.Black, this));
+        PlaceNewPiece('e', 7, new Pawn(CurrentBoardChessMatch, Color.Black, this));
+        PlaceNewPiece('f', 7, new Pawn(CurrentBoardChessMatch, Color.Black, this));
+        PlaceNewPiece('g', 7, new Pawn(CurrentBoardChessMatch, Color.Black, this));
+        PlaceNewPiece('h', 7, new Pawn(CurrentBoardChessMatch, Color.Black, this));
     }
 }

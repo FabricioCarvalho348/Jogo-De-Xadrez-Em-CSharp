@@ -4,8 +4,11 @@ namespace xadrez_console.chess;
 
 public class Pawn : Piece
 {
-    public Pawn(Board associateBoard, Color pieceColor) : base(associateBoard, pieceColor)
+    private ChessMatch _chessMatch;
+
+    public Pawn(Board associateBoard, Color pieceColor, ChessMatch chessMatch) : base(associateBoard, pieceColor)
     {
+        _chessMatch = chessMatch;
     }
 
     public override string ToString()
@@ -13,11 +16,10 @@ public class Pawn : Piece
         return "P";
     }
 
-    private bool OpponentExists(Position currentPosition)
+    private bool existeInimigo(Position currentPosition)
     {
-        Piece piece = AssociateBoard.GetPiece(currentPosition);
-
-        return piece != null && piece.PieceColor == PieceColor;
+        Piece currentPiece = AssociateBoard.GetPiece(currentPosition);
+        return currentPiece != null && currentPiece.PieceColor != PieceColor;
     }
 
     private bool FreePosition(Position currentPosition)
@@ -50,16 +52,34 @@ public class Pawn : Piece
 
             currentPosition.DefineValuesPosition(CurrentPosition.PositionLines - 1,
                 CurrentPosition.PositionColumns - 1);
-            if (AssociateBoard.IsValidPosition(currentPosition) && OpponentExists(currentPosition))
+            if (AssociateBoard.IsValidPosition(currentPosition) && existeInimigo(currentPosition))
             {
                 mat[currentPosition.PositionLines, currentPosition.PositionColumns] = true;
             }
 
             currentPosition.DefineValuesPosition(CurrentPosition.PositionLines - 1,
                 CurrentPosition.PositionColumns + 1);
-            if (AssociateBoard.IsValidPosition(currentPosition) && OpponentExists(currentPosition))
+            if (AssociateBoard.IsValidPosition(currentPosition) && existeInimigo(currentPosition))
             {
                 mat[currentPosition.PositionLines, currentPosition.PositionColumns] = true;
+            }
+
+            // #jogadaespecial en passant
+            if (CurrentPosition.PositionLines == 3)
+            {
+                Position esquerda = new Position(CurrentPosition.PositionLines, CurrentPosition.PositionColumns - 1);
+                if (AssociateBoard.IsValidPosition(esquerda) && existeInimigo(esquerda) &&
+                    AssociateBoard.GetPiece(esquerda) == _chessMatch.VulnerableEnPassant)
+                {
+                    mat[esquerda.PositionLines - 1, esquerda.PositionColumns] = true;
+                }
+
+                Position direita = new Position(CurrentPosition.PositionLines, CurrentPosition.PositionColumns + 1);
+                if (AssociateBoard.IsValidPosition(direita) && existeInimigo(direita) &&
+                    AssociateBoard.GetPiece(direita) == _chessMatch.VulnerableEnPassant)
+                {
+                    mat[direita.PositionLines - 1, direita.PositionColumns] = true;
+                }
             }
         }
         else
@@ -81,16 +101,34 @@ public class Pawn : Piece
 
             currentPosition.DefineValuesPosition(CurrentPosition.PositionLines + 1,
                 CurrentPosition.PositionColumns - 1);
-            if (AssociateBoard.IsValidPosition(currentPosition) && OpponentExists(currentPosition))
+            if (AssociateBoard.IsValidPosition(currentPosition) && existeInimigo(currentPosition))
             {
                 mat[currentPosition.PositionLines, currentPosition.PositionColumns] = true;
             }
 
             currentPosition.DefineValuesPosition(CurrentPosition.PositionLines + 1,
                 CurrentPosition.PositionColumns + 1);
-            if (AssociateBoard.IsValidPosition(currentPosition) && OpponentExists(currentPosition))
+            if (AssociateBoard.IsValidPosition(currentPosition) && existeInimigo(currentPosition))
             {
                 mat[currentPosition.PositionLines, currentPosition.PositionColumns] = true;
+            }
+
+            // #jogadaespecial en passant
+            if (CurrentPosition.PositionLines == 4)
+            {
+                Position esquerda = new Position(CurrentPosition.PositionLines, CurrentPosition.PositionColumns - 1);
+                if (AssociateBoard.IsValidPosition(esquerda) && existeInimigo(esquerda) &&
+                    AssociateBoard.GetPiece(esquerda) == _chessMatch.VulnerableEnPassant)
+                {
+                    mat[esquerda.PositionLines + 1, esquerda.PositionColumns] = true;
+                }
+
+                Position direita = new Position(CurrentPosition.PositionLines, CurrentPosition.PositionColumns + 1);
+                if (AssociateBoard.IsValidPosition(direita) && existeInimigo(direita) &&
+                    AssociateBoard.GetPiece(direita) == _chessMatch.VulnerableEnPassant)
+                {
+                    mat[direita.PositionLines + 1, direita.PositionColumns] = true;
+                }
             }
         }
 
