@@ -69,9 +69,16 @@ public class ChessMatch
         {
             xeque = false;
         }
-        
-        CurrentTurn++;
-        SwitchPlayer();
+
+        if (TestXequeMate(Opponent(CurrentPlayer)))
+        { 
+            MatchEnded = true;
+        }
+        else
+        {
+            CurrentTurn++;
+            SwitchPlayer();
+        }
     }
 
     public void ValidatePositionOrigin(Position currentPosition)
@@ -183,6 +190,39 @@ public class ChessMatch
 
         return false;
     }
+
+    public bool TestXequeMate(Color color)
+    {
+        if (!IsInCheck(color))
+        {
+            return false;
+        }
+
+        foreach (Piece piece in PiecesInMatch(color))
+        {
+            bool[,] mat = piece.MovimentPossibles();
+            for (int i = 0; i < CurrentBoardChessMatch.BoardLines; i++)
+            {
+                for (int j = 0; j < CurrentBoardChessMatch.BoardColumns; j++)
+                {
+                    if (mat[i, j])
+                    {
+                        Position origin = piece.CurrentPosition;
+                        Position destination = new Position(i, j);
+                        Piece capturedPiece = ExecuteMove(origin, destination);
+                        bool testXeque = IsInCheck(color);
+                        UndoMove(origin, destination, capturedPiece);
+                        if (!testXeque)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
     
 
     public void PlaceNewPiece(char column, int line, Piece piece)
@@ -193,18 +233,39 @@ public class ChessMatch
 
     private void PlacesPiecesInBoard()
     {
-        PlaceNewPiece('c', 1, new Rook(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('c', 2, new Rook(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('d', 2, new Rook(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('e', 2, new Rook(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('e', 1, new Rook(CurrentBoardChessMatch, Color.White));
-        PlaceNewPiece('d', 1, new King(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('a', 1, new Rook(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('b', 1, new Knight(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('c', 1, new Bishop(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('d', 1, new Queen(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('e', 1, new King(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('f', 1, new Bishop(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('g', 1, new Knight(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('h', 1, new Rook(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('a', 2, new Pawn(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('b', 2, new Pawn(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('c', 2, new Pawn(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('d', 2, new Pawn(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('e', 2, new Pawn(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('f', 2, new Pawn(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('g', 2, new Pawn(CurrentBoardChessMatch, Color.White));
+        PlaceNewPiece('h', 2, new Pawn(CurrentBoardChessMatch, Color.White));
 
-        PlaceNewPiece('c', 7, new Rook(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('c', 8, new Rook(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('d', 7, new Rook(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('e', 7, new Rook(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('e', 8, new Rook(CurrentBoardChessMatch, Color.Black));
-        PlaceNewPiece('d', 8, new King(CurrentBoardChessMatch, Color.Black));
+
+        PlaceNewPiece('a', 8, new Rook(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('b', 8, new Knight(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('c', 8, new Bishop(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('d', 8, new Queen(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('e', 8, new King(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('f', 8, new Bishop(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('g', 8, new Knight(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('h', 8, new Rook(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('a', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('b', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('c', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('d', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('e', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('f', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('g', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
+        PlaceNewPiece('h', 7, new Pawn(CurrentBoardChessMatch, Color.Black));
     }
 }

@@ -42,6 +42,8 @@ class Program
                     Console.ReadLine();
                 }
             }
+            Console.Clear();
+            Screen.PrintMatch(chessMatch);
         }
         catch (BoardException e)
         {
